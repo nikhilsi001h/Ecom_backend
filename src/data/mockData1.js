@@ -1,11 +1,9 @@
 const bcrypt = require('bcryptjs');
 
-// Hash passwords synchronously for initial data
 const hashedAdminPass = bcrypt.hashSync('admin123', 12);
 const hashedUserPass = bcrypt.hashSync('user123', 12);
 const hashedVendorPass = bcrypt.hashSync('vendor123', 12);
 
-// In-memory database
 const db = {
   users: [
     {
@@ -46,6 +44,33 @@ const db = {
       avatar: null,
       created_at: new Date('2024-01-03'),
       updated_at: new Date('2024-01-03')
+    },
+    // ADD THIS VENDOR USER
+    {
+      id: 4,
+      name: 'Tech Paradise Vendor',
+      email: 'vendor1@ecommerce.com',
+      password: hashedVendorPass,
+      phone: '1112223333',
+      role: 'vendor',
+      is_email_verified: true,
+      is_phone_verified: true,
+      avatar: null,
+      created_at: new Date('2024-01-01'),
+      updated_at: new Date('2024-01-01')
+    },
+    {
+      id: 5,
+      name: 'Fashion Hub Vendor',
+      email: 'vendor2@ecommerce.com',
+      password: hashedVendorPass,
+      phone: '4445556666',
+      role: 'vendor',
+      is_email_verified: true,
+      is_phone_verified: true,
+      avatar: null,
+      created_at: new Date('2024-01-01'),
+      updated_at: new Date('2024-01-01')
     }
   ],
 
@@ -60,6 +85,7 @@ const db = {
   vendors: [
     {
       id: 1,
+      user_id: 4, // LINK TO VENDOR USER
       business_name: 'Tech Paradise',
       email: 'vendor1@ecommerce.com',
       password: hashedVendorPass,
@@ -73,6 +99,7 @@ const db = {
     },
     {
       id: 2,
+      user_id: 5, // LINK TO VENDOR USER
       business_name: 'Fashion Hub',
       email: 'vendor2@ecommerce.com',
       password: hashedVendorPass,
@@ -367,9 +394,8 @@ const db = {
   notifications: []
 };
 
-// Auto-increment IDs
 let nextId = {
-  users: 4,
+  users: 6, // UPDATED
   categories: 6,
   vendors: 3,
   products: 11,

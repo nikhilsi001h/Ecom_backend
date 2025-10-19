@@ -38,6 +38,14 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Root route handler
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Server is running!'
+  });
+});
+
 // API routes
 app.use('/api', routes);
 

@@ -4,7 +4,7 @@ const productController = require('../controllers/productController');
 const reviewController = require('../controllers/reviewController');
 const auth = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
-const rateLimit = require('../middlewares/rateLimit');
+const rateLimit = require('../middlewares/ratelimit');
 
 router.get('/', rateLimit('anon'), productController.listProducts);
 router.get('/featured', productController.featuredProducts);
