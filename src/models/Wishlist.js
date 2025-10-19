@@ -1,4 +1,4 @@
-const { db, nextId } = require('../data/mockData1');
+const { db, nextId } = require('../data/mockData');
 
 class Wishlist {
   static async findByUser(userId) {

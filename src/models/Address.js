@@ -1,4 +1,4 @@
-const { db, nextId } = require('../data/mockData1');
+const { db, nextId } = require('../data/mockData');
 
 class Address {
   static async create(addressData) {

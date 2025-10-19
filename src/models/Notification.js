@@ -1,4 +1,4 @@
-const { db, nextId } = require('../data/mockData1');
+const { db, nextId } = require('../data/mockData');
 
 class Notification {
   static async create({ userId, type, title, message, link = null }) {
