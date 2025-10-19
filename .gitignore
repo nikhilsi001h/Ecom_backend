@@ -1,0 +1,35 @@
+# Node modules folder
+node_modules/
+
+# Environment variables file
+.env
+
+# Log files
+*.log
+
+# npm cache
+.npm
+
+# Build output folders
+dist/
+build/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE / editor folders
+.vscode/
+.idea/
+
+# Optional coverage directory
+coverage/
+
+# Optional npm debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional lock files (keep if using)
+# package-lock.json
+# yarn.lock
