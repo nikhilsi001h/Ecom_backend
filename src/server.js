@@ -1,38 +1,63 @@
-require('dotenv').config();
-const app = require('./app');
+const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
+const morgan = require('morgan');
+require('express-async-errors');
 
-const PORT = process.env.PORT || 5000;
+const routes = require('./routes');
+const errorHandler = require('./middlewares/errorHandler');
+const requestId = require('./middlewares/requestId');
 
-// Start server
-const server = app.listen(PORT, () => {
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('🚀 E-Commerce Backend with Mock Data');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log(`📡 Server: http://localhost:${PORT}`);
-  console.log(`🏥 Health: http://localhost:${PORT}/health`);
-  console.log(`🔧 Environment: ${process.env.NODE_ENV}`);
-  console.log(`💾 Database: Mock Data (In-Memory)`);
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('\n📝 Test Credentials:');
-  console.log('   Admin:  admin@ecommerce.com / admin123');
-  console.log('   User:   user@ecommerce.com / user123');
-  console.log('   Vendor: vendor1@ecommerce.com / vendor123');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-});
+const app = express();
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error('UNHANDLED REJECTION! 💥 Shutting down...');
-  console.error(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
+// Security middleware
+app.use(helmet());
+app.use(cors({ origin: true, credentials: true }));
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Logging
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
+}
+
+// Add request ID to all requests
+app.use(requestId);
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'success', 
+    message: 'Server is healthy',
+    timestamp: new Date().toISOString(),
+    database: 'Mock Data (In-Memory)'
   });
 });
 
-// Handle SIGTERM
-process.on('SIGTERM', () => {
-  console.log('👋 SIGTERM received. Shutting down gracefully...');
-  server.close(() => {
-    console.log('💥 Process terminated!');
+// Root route handler
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Server is running!'
   });
 });
+
+// API routes
+app.use('/api', routes);
+
+// 404 handler
+app.all('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Can't find ${req.originalUrl} on this server!`
+  });
+});
+
+// Global error handler
+app.use(errorHandler);
+
+module.exports = app;
